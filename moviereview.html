@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to MediaVibeIT News. Get the latest updates and more.">
+  <title>Welcome to MediaVibeIT News</title>
+
+  <!-- External Styles and Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+    .menu-icon {
+      font-size: 24px;
+      color: #0a74da;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .menu-icon.active {
+      color: #f00; /* Change color for 'X' */
+    }
+    .logo {
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: middle;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0a74da; /* Match the sidebar/menu color */
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #0a74da; /* Menu color */
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: -250px; /* Hidden initially */
+      transition: left 0.3s ease;
+      padding-top: 20px;
+      height: 100vh; /* Ensures the sidebar fills the entire height */
+      color: white; /* Text color for contrast */
+      z-index: 1;
+    }
+    .sidebar.active {
+      left: 0; /* Show when active */
+    }
+    .sidebar-wrapper {
+      padding: 20px;
+    }
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: white; /* Sidebar logo text color */
+    }
+    .menu-button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #ffffff; /* Button color */
+      color: #0a74da; /* Button text color */
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    .menu-button:hover {
+      background-color: #e1e1e1;
+    }
+    .menu-button.active {
+      background-color: #ffcc00; /* Bright color for active menu item */
+      color: #fff; /* White text for better contrast */
+    }
+    .main-content {
+      margin-left: 0;
+      padding: 2rem;
+      flex: 1;
+      transition: margin-left 0.3s ease;
+      position: relative;
+      min-height: 100vh; /* Ensures the content area also covers the full height */
+    }
+    .main-content.shifted {
+      margin-left: 250px; /* Shift when sidebar is open */
+    }
+    .content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      padding: 10px;
+      background-color: #f4f4f4;
+      width: 100%;
+      text-align: right;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Additional Styles for Movie Review */
+    .channel-name {
+      font-family: 'Lobster', cursive;
+      font-size: 42px;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #4b0082, #8a2be2);
+      padding: 10px;
+      border-radius: 10px;
+      letter-spacing: 1.5px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .movie-details {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #d3d3d3;
+      padding-bottom: 20px;
+    }
+
+    .movie-details img {
+      width: 300px;
+      height: 400px;
+      object-fit: contain;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+      border: 3px solid #4b0082;
+      margin-right: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .movie-info {
+      flex: 1;
+    }
+
+    .movie-info h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      margin: 0;
+      color: #4b0082;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .movie-info p {
+      margin: 5px 0;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .rating {
+      font-size: 30px;
+      color: #ff8c00;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .rating span {
+      color: #333;
+      font-size: 24px;
+    }
+
+    .positives-negatives {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .positives, .negatives {
+      flex: 1;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .positives {
+      background: #dff0d8;
+      border: 2px solid #3c763d;
+    }
+
+    .negatives {
+      background: #f2dede;
+      border: 2px solid #a94442;
+    }
+
+    .positives h3, .negatives h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #555;
+      text-align: center;
+    }
+
+    .positives h3 {
+      color: #3c763d;
+    }
+
+    .negatives h3 {
+      color: #a94442;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-left: 0;
+    }
+
+    li {
+      font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .positives li::before {
+      content: "👍 ";
+      color: #3c763d;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .negatives li::before {
+      content: "👎 ";
+      color: #a94442;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .review {
+      background: none !important; /* Remove background color with !important */
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #d3d3d3;
+      margin-bottom: 20px;
+    }
+
+    .review h3 {
+      font-size: 26px;
+      color: #4b0082;
+      margin-bottom: 15px;
+      text-align: center;
+      border-bottom: 2px solid #4b0082;
+      padding-bottom: 10px;
+    }
+
+    .review p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .review .summary {
+      background: #ffffff;
+      padding: 15px;
+      border: 1px solid #d3d3d3;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .review .summary h4 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #4b0082;
+    }
+
+    .review .summary p {
+      font-size: 16px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .movie-details {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .movie-details img {
+        margin-bottom: 20px;
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-wrapper">
+      <div class="sidebar-logo" aria-label="MediaVibeIT Logo">
+        MediaVibeIT
+      </div>
+      <button class="menu-button" onclick="window.location.href='Home.html'">Home</button>
+      <button class="menu-button" onclick="window.location.href='News.html'">News</button>
+      <button class="menu-button" onclick="window.location.href='reviews.html'">Reviews</button>
+      <button class="menu-button" onclick="window.location.href='about.html'">About</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="main-content">
+    <div>
+      <span class="menu-icon" id="menuIcon" onclick="toggleMenu()"><i class="fa fa-bars"></i></span>
+      <span class="logo">MediaVibeIT</span>
+    </div>
+
+    <div class="content">
+      <div class="channel-name">
+        Movie Review
+      </div>
+
+      <div class="movie-details">
+        <img src="https://via.placeholder.com/300x400" alt="Movie Poster">
+        <div class="movie-info">
+          <h2>Movie Title</h2>
+          <p><strong>Genre:</strong> Action, Adventure</p>
+          <p><strong>Director:</strong> John Doe</p>
+          <p><strong>Release Date:</strong> 2024-09-09</p>
+          <p class="rating">Rating: <span>8.5/10</span></p>
+        </div>
+      </div>
+
+      <div class="positives-negatives">
+        <div class="positives">
+          <h3>Positives</h3>
+          <ul>
+            <li>Exciting action sequences</li>
+            <li>Great visual effects</li>
+            <li>Strong performances by the cast</li>
+          </ul>
+        </div>
+        <div class="negatives">
+          <h3>Negatives</h3>
+          <ul>
+            <li>Predictable plot</li>
+            <li>Some pacing issues</li>
+            <li>Lack of character development</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="review">
+        <h3>My Review</h3>
+        <p>This movie delivers on action and spectacle, with some impressive visual effects and a thrilling storyline. However, it suffers from a predictable plot and could have benefited from more character development. Overall, it's an entertaining watch for fans of the genre.</p>
+        <div class="summary">
+          <h4>Summary</h4>
+          <p>While it may not break new ground, this film provides enough excitement and thrills to make it a worthwhile experience for action enthusiasts. The strong performances and visual effects are its highlights, even if the plot is somewhat formulaic.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © <span id="year"></span> by MediaVibeIT
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function toggleMenu() {
+      var sidebar = document.getElementById('sidebar');
+      var mainContent = document.getElementById('main-content');
+      var menuIcon = document.getElementById('menuIcon');
+
+      sidebar.classList.toggle('active');
+      mainContent.classList.toggle('shifted');
+
+      // Toggle between menu bars and 'X' icon
+      if (menuIcon.classList.contains('active')) {
+        menuIcon.innerHTML = '<i class="fa fa-bars"></i>'; // Show menu icon
+      } else {
+        menuIcon.innerHTML = '<i class="fa fa-times"></i>'; // Show 'X' icon
+      }
+
+      menuIcon.classList.toggle('active');
+    }
+
+    // Set current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
