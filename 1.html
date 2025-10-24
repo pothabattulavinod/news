@@ -1,0 +1,13 @@
+<script>
+const workerURL = "https://sweet-star-d68b.vinodyadavpothabattula666.workers.dev/";
+
+fetch(workerURL)
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("output");
+    container.innerHTML = JSON.stringify(data, null, 2);
+  })
+  .catch(err => console.error(err));
+</script>
+
+<pre id="output">Loading data...</pre>
